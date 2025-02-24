@@ -30,7 +30,7 @@ def cari_akar(a, b, c):
 
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
-st.write("Masukkan nilai a, b, dan c dari persamaan kuadrat \( ax^2 + bx + c = 0 \)")
+st.markdown("### Masukkan nilai a, b, dan c dari persamaan kuadrat: $ax^2 + bx + c = 0$")
 
 a = st.number_input("Masukkan nilai a", value=1.0, format="%.2f")
 b = st.number_input("Masukkan nilai b", value=0.0, format="%.2f")
