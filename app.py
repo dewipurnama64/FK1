@@ -32,7 +32,7 @@ def cari_akar(a, b, c):
 st.title("📐 Kalkulator Fungsi Kuadrat")
 st.markdown("""
     <h4 style='text-align: center;'>Masukkan nilai a, b, dan c dari persamaan kuadrat:</h4>
-    <h4 style='text-align: center;'>$ax^2 + bx + c = 0$</h4>
+    <h4 style='text-align: center;'>\( ax^{2} + bx + c = 0 \)</h4>
     """, unsafe_allow_html=True)
 
 a = st.number_input("Masukkan nilai a", value=1.0, format="%.2f")
