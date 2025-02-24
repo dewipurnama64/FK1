@@ -6,9 +6,14 @@ import matplotlib.pyplot as plt
 def hitung_diskriminan(a, b, c):
     return b**2 - 4*a*c
 
-def cek_definit(a):
-    return "Definit positif" if a > 0 else "Definit negatif" if a < 0 else "Bukan fungsi kuadrat"
-
+def cek_definit(D, a):
+    if D < 0:
+        if a > 0:
+            return "Definit positif"
+        elif a < 0:
+            return "Definit negatif"
+    return "Bukan definit positif maupun definit negatif"
+    
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     if D > 0:
@@ -33,12 +38,12 @@ c = st.number_input("Masukkan nilai c", value=0.0, format="%.2f")
 
 if st.button("🔍 Hitung"):
     D = hitung_diskriminan(a, b, c)
-    definit = cek_definit(a)
+    definit = cek_definit(D, a)  
     akar = cari_akar(a, b, c)
     
     st.subheader("📊 Hasil Perhitungan")
     st.write(f"📌 **Diskriminan:** {D}")
-    st.write(f"📌 **Definit:** {definit}")
+    st.write(f"📌 **Definit:** {definit}")  
     st.write(f"📌 **Akar:** {akar}")
 
     # Menampilkan grafik fungsi kuadrat
