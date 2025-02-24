@@ -28,6 +28,11 @@ def cari_akar(a, b, c):
         imag_part = np.sqrt(-D) / (2*a)
         return f"Akar kompleks: x1 = {real_part} + {imag_part}i, x2 = {real_part} - {imag_part}i"
 
+# Menghitung titik puncak
+if a != 0:
+    x_p = -b / (2 * a)
+    y_p = -D / (4 * a)
+
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
 st.markdown("#### Masukkan nilai a, b, dan c dari persamaan kuadrat:")
@@ -46,6 +51,9 @@ if st.button("🔍 Hitung"):
     st.write(f"📌 **Diskriminan:** {D}")
     st.write(f"📌 **Definit:** {definit}")  
     st.write(f"📌 **Akar:** {akar}")
+    st.markdown("### Titik Puncak (Nilai Optimum):")
+    st.markdown(f"$ x_p = \\frac{{-({b})}}{{2({a})}} = {x_p:.2f} $")
+    st.markdown(f"$ y_p = \\frac{{-({D})}}{{4({a})}} = {y_p:.2f} $")
 
     # Menampilkan grafik fungsi kuadrat
     x = np.linspace(-10, 10, 100)
