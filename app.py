@@ -30,7 +30,8 @@ def cari_akar(a, b, c):
 
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
-st.latex("<h4 style='text-align: center;'>Masukkan nilai a, b, dan c dari persamaan kuadrat:<br> $ax^2 + bx + c = 0$ </h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center;'>Masukkan nilai a, b, dan c dari persamaan kuadrat:</h4>", unsafe_allow_html=True)
+st.latex(r"ax^2 + bx + c = 0")
 
 a = st.number_input("Masukkan nilai a", value=1.0, format="%.2f")
 b = st.number_input("Masukkan nilai b", value=0.0, format="%.2f")
