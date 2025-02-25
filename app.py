@@ -43,23 +43,23 @@ def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     
     if D > 0:  # Akar real berbeda
-        akar1 = Fraction(-b + sp.sqrt(D), 2*a)
-        akar2 = Fraction(-b - sp.sqrt(D), 2*a)
+        akar1 = sp.simplify((-b + sp.sqrt(D)) / (2*a))
+        akar2 = sp.simplify((-b - sp.sqrt(D)) / (2*a))
         return f"x₁ = {akar1}, x₂ = {akar2}"
     
     elif D == 0:  # Akar kembar
-        akar = Fraction(-b, 2*a)
+        akar = sp.simplify(-b / (2*a))
         return f"x = {akar} (Akar kembar)"
     
     else:  # Akar kompleks
-        real_part = Fraction(-b, 2*a)
-        imag_part = Fraction(sp.sqrt(-D), 2*a)
+        real_part = sp.simplify(-b / (2*a))
+        imag_part = sp.simplify(sp.sqrt(-D) / (2*a))
         return f"x₁ = {real_part} + {imag_part}i, x₂ = {real_part} - {imag_part}i"
 
 # Fungsi mencari titik puncak
 def cari_titik_puncak(a, b, c):
-    x_p = Fraction(-b, 2*a)
-    y_p = Fraction(-hitung_diskriminan(a, b, c), 4*a)
+    x_p = sp.simplify(-b / (2*a))
+    y_p = sp.simplify(-hitung_diskriminan(a, b, c) / (4*a))
     return x_p, y_p
 
 # UI di Streamlit
