@@ -7,6 +7,21 @@ import sympy as sp
 def format_angka(x):
     return int(x) if x == int(x) else round(x, 2)
 
+# Fungsi untuk menyusun persamaan kuadrat dengan tanda yang benar
+def format_persamaan(a, b, c):
+    persamaan = f"f(x) = {format_angka(a)}x^2"
+    if b > 0:
+        persamaan += f" + {format_angka(b)}x"
+    elif b < 0:
+        persamaan += f" - {abs(format_angka(b))}x"
+
+    if c > 0:
+        persamaan += f" + {format_angka(c)}"
+    elif c < 0:
+        persamaan += f" - {abs(format_angka(c))}"
+    
+    return persamaan
+
 # Fungsi Matematika
 def hitung_diskriminan(a, b, c):
     return b**2 - 4*a*c
@@ -49,9 +64,9 @@ if st.button("🔍 Hitung"):
     st.subheader("📊 Hasil Perhitungan")
 
     # Menampilkan persamaan kuadrat
-    a_fmt, b_fmt, c_fmt = format_angka(a), format_angka(b), format_angka(c)
     st.markdown("### 📌 Persamaan Kuadrat:")
-    st.latex(f"f(x) = {a_fmt}x^2 + {b_fmt}x + {c_fmt}")
+    persamaan_kuadrat = format_persamaan(a, b, c)
+    st.latex(persamaan_kuadrat)
 
     # Diskriminan dan definit
     st.write(f"📌 **Diskriminan:** {D}")
@@ -60,7 +75,7 @@ if st.button("🔍 Hitung"):
     # Menampilkan cara pengerjaan akar
     st.markdown("### 📌 Cara Menghitung Akar-Akar:")
     st.latex(r"x_{1,2} = \frac{-b \pm \sqrt{D}}{2a}")
-    st.latex(fr"x_{{1,2}} = \frac{{-({b_fmt}) \pm \sqrt{{{D}}}}}{{2({a_fmt})}}")
+    st.latex(fr"x_{{1,2}} = \frac{{-({format_angka(b)}) \pm \sqrt{{{format_angka(D)}}}}}{{2({format_angka(a)})}}")
 
     if D >= 0:
         x1, x2 = akar
@@ -69,7 +84,7 @@ if st.button("🔍 Hitung"):
     else:
         real_part, imag_part = akar
         real_fmt, imag_fmt = format_angka(real_part), format_angka(imag_part)
-        st.latex(fr"x_{{1,2}} = \frac{{-({b_fmt})}}{{2({a_fmt})}} \pm \frac{{\sqrt{{{format_angka(-D)}}}}}{{2({a_fmt})}} i")
+        st.latex(fr"x_{{1,2}} = \frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} \pm \frac{{\sqrt{{{format_angka(-D)}}}}}{{2({format_angka(a)})}} i")
         st.latex(fr"x_1 = {real_fmt} + {imag_fmt}i, \quad x_2 = {real_fmt} - {imag_fmt}i")
 
     # Titik puncak (nilai optimum)
@@ -80,8 +95,8 @@ if st.button("🔍 Hitung"):
         x_p_fmt, y_p_fmt = format_angka(x_p), format_angka(y_p)
 
         st.markdown("### Titik Puncak (Nilai Optimum):")
-        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({b_fmt})}}{{2({a_fmt})}} = {x_p_fmt}")
-        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({a_fmt})}} = {y_p_fmt}")
+        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {x_p_fmt}")
+        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({format_angka(a)})}} = {y_p_fmt}")
 
         # Perbaikan skala grafik agar lebih sesuai
         x_min = x_p - 5
@@ -96,7 +111,7 @@ if st.button("🔍 Hitung"):
 
         # Plot grafik
         fig, ax = plt.subplots()
-        ax.plot(x, y, label=f"${a_fmt}x^2 + {b_fmt}x + {c_fmt}$", color="blue")
+        ax.plot(x, y, label=f"${persamaan_kuadrat}$", color="blue")
         ax.axhline(0, color='black', linewidth=1)
         ax.axvline(0, color='black', linewidth=1)
         
