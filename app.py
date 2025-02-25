@@ -78,13 +78,13 @@ if st.button("🔍 Hitung"):
     st.latex(fr"x_{{1,2}} = \frac{{-({format_angka(b)}) \pm \sqrt{{{format_angka(D)}}}}}{{2({format_angka(a)})}}")
 
     if D >= 0:
-    x1, x2 = akar
-    st.latex(fr"x_1 = {x1}, \quad x_2 = {x2}")
-    st.write(f"**Akar-akar persamaan:** x₁ = {x1}, x₂ = {x2}")
-else:
-    real_part, imag_part = akar
-    st.latex(fr"x_{{1,2}} = {real_part} \pm {imag_part}i")
-    st.write(f"**Akar-akar kompleks:** x₁ = {real_part} + {imag_part}i, x₂ = {real_part} - {imag_part}i")
+        x1, x2 = akar
+        st.latex(fr"x_1 = {x1}, \quad x_2 = {x2}")
+        st.write(f"**Akar-akar persamaan:** x₁ = {x1}, x₂ = {x2}")
+    else:
+        real_part, imag_part = akar
+        st.latex(fr"x_{{1,2}} = {real_part} \pm {imag_part}i")
+        st.write(f"**Akar-akar kompleks:** x₁ = {real_part} + {imag_part}i, x₂ = {real_part} - {imag_part}i")
     
     # Titik puncak (nilai optimum)
     if a != 0:
