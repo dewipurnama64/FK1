@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-from fractions import Fraction
 import sympy as sp
 
 # Fungsi Matematika
@@ -13,32 +12,21 @@ def cek_definit(D, a):
         return "Definit positif" if a > 0 else "Definit negatif"
     return "Bukan definit positif maupun definit negatif"
 
-def format_pecahan(nilai):
-    """Mengonversi angka ke pecahan paling sederhana."""
-    pecahan = Fraction(valor).limit_denominator()
-    return pecahan if pecahan.denominator != 1 else int(pecahan.numerator)
-
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
-    sqrt_D = sp.sqrt(D)  # Simbol akar
+    sqrt_D = sp.sqrt(D)
 
     if D > 0:
-        if sqrt_D.is_integer:  # Jika D adalah kuadrat sempurna
-            x1 = Fraction(-b + sqrt_D, 2*a)
-            x2 = Fraction(-b - sqrt_D, 2*a)
-        else:
-            x1 = f"\\frac{{-{b} + \\sqrt{{{D}}}}}{{2({a})}}"
-            x2 = f"\\frac{{-{b} - \\sqrt{{{D}}}}}{{2({a})}}"
-        return x1, x2
-
+        x1 = (-b + sqrt_D) / (2*a)
+        x2 = (-b - sqrt_D) / (2*a)
     elif D == 0:
-        x = Fraction(-b, 2*a)
-        return x, x
-
+        x1 = x2 = -b / (2*a)
     else:
-        real_part = Fraction(-b, 2*a)
-        imag_part = f"\\frac{{\\sqrt{{{-D}}}}}{{2({a})}}"
-        return f"{real_part} + {imag_part} i", f"{real_part} - {imag_part} i"
+        real_part = -b / (2*a)
+        imag_part = sp.sqrt(-D) / (2*a)
+        return f"{real_part:.2f} + {imag_part:.2f}i", f"{real_part:.2f} - {imag_part:.2f}i"
+
+    return f"{x1:.2f}", f"{x2:.2f}"
 
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
@@ -64,23 +52,23 @@ if st.button("🔍 Hitung"):
     st.write(f"📌 **Diskriminan:** {D}")
     st.write(f"📌 **Definit:** {definit}")
 
-    # Menampilkan akar dalam bentuk pecahan atau akar
+    # Menampilkan akar dalam bentuk desimal
     st.markdown("### 📌 Akar-akar Persamaan:")
     st.latex(r"x_{1,2} = \frac{-b \pm \sqrt{D}}{2a}")
-    st.latex(f"x_1 = {akar1}, \quad x_2 = {akar2}")
+    st.write(f"**x₁ = {akar1}, x₂ = {akar2}**")
 
     # Titik puncak (nilai optimum)
     if a != 0:
-        x_p = format_pecahan(-b / (2 * a))
-        y_p = format_pecahan(-D / (4 * a))
+        x_p = -b / (2 * a)
+        y_p = -D / (4 * a)
 
         st.markdown("### Titik Puncak (Nilai Optimum):")
-        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({b})}}{{2({a})}} = {x_p}")
-        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({a})}} = {y_p}")
+        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({b})}}{{2({a})}} = {x_p:.2f}")
+        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({a})}} = {y_p:.2f}")
 
         # Perbaikan skala grafik agar lebih sesuai
-        x_min = x_p - 5 if isinstance(x_p, (int, float)) else -10
-        x_max = x_p + 5 if isinstance(x_p, (int, float)) else 10
+        x_min = x_p - 5
+        x_max = x_p + 5
         x = np.linspace(x_min, x_max, 400)
         y = a*x**2 + b*x + c
 
@@ -96,7 +84,7 @@ if st.button("🔍 Hitung"):
         ax.axvline(0, color='black', linewidth=1)
         
         # Menandai titik puncak
-        ax.scatter(float(x_p), float(y_p), color='red', zorder=3, label=f"Titik Puncak ({x_p}, {y_p})")
+        ax.scatter(float(x_p), float(y_p), color='red', zorder=3, label=f"Titik Puncak ({x_p:.2f}, {y_p:.2f})")
 
         # Menyesuaikan skala
         ax.set_xlim(x_min, x_max)
