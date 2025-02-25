@@ -11,7 +11,7 @@ def format_angka(x):
 
 # Fungsi untuk membentuk persamaan kuadrat dengan format yang benar
 def format_persamaan(a, b, c):
-    persamaan = f"f(x) = {format_angka(a)}x^2"
+    persamaan = f"{format_angka(a)}x^2"
 
     if b != 0:
         if b > 0:
@@ -46,21 +46,16 @@ def cari_akar(a, b, c):
         akar2 = (-b - sp.sqrt(D)) / (2*a)
 
         langkah = f"""
-        \\[
         x_{{1,2}} = \\frac{{-({format_angka(b)}) \\pm \\sqrt{{{format_angka(D)}}}}}{{2({format_angka(a)})}}
-        \\]
-        \\[
+        \\\\
         x_1 = {format_angka(sp.N(akar1))}, \\quad x_2 = {format_angka(sp.N(akar2))}
-        \\]
         """
-    
+
     elif D == 0:  # Akar kembar
         akar = -b / (2*a)
 
         langkah = f"""
-        \\[
         x = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {format_angka(sp.N(akar))}
-        \\]
         """
 
     else:  # Akar kompleks
@@ -68,13 +63,10 @@ def cari_akar(a, b, c):
         imag_part = sp.sqrt(-D) / (2*a)
 
         langkah = f"""
-        \\[
         x_{{1,2}} = \\frac{{-({format_angka(b)}) \\pm \\sqrt{{{format_angka(-D)}}}i}}{{2({format_angka(a)})}}
-        \\]
-        \\[
+        \\\\
         x_1 = {format_angka(sp.N(real_part))} + {format_angka(sp.N(imag_part))}i, 
         \\quad x_2 = {format_angka(sp.N(real_part))} - {format_angka(sp.N(imag_part))}i
-        \\]
         """
     
     return langkah
@@ -85,12 +77,9 @@ def cari_titik_puncak(a, b, c):
     y_p = -hitung_diskriminan(a, b, c) / (4*a)
 
     langkah = f"""
-    \\[
     x_p = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {format_angka(x_p)}
-    \\]
-    \\[
+    \\\\
     y_p = \\frac{{-({format_angka(hitung_diskriminan(a, b, c))})}}{{4({format_angka(a)})}} = {format_angka(y_p)}
-    \\]
     """
     
     return x_p, y_p, langkah
@@ -116,16 +105,16 @@ if st.button("🔍 Hitung"):
         
         st.subheader("📊 Hasil Perhitungan")
         st.markdown(f"#### **Persamaan Kuadrat:**")
-        st.latex(format_persamaan(a, b, c))  # Menampilkan persamaan kuadrat
+        st.latex(f"f(x) = {format_persamaan(a, b, c)}")  # Menampilkan persamaan kuadrat
         
         st.write(f"📌 **Diskriminan (D):** {format_angka(D)}")
         st.write(f"📌 **Definit:** {definit}")  
 
         st.markdown("### **Perhitungan Akar-Akar:**")
-        st.markdown(akar_langkah)
+        st.latex(akar_langkah)
 
         st.markdown("### **Perhitungan Titik Puncak (Nilai Optimum):**")
-        st.markdown(puncak_langkah)
+        st.latex(puncak_langkah)
 
         # Menampilkan grafik fungsi kuadrat
         x_range = max(abs(int(x_p)) + 5, 10)  # Menyesuaikan range x agar grafik lebih proporsional
