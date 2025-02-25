@@ -3,10 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
 
-# Fungsi untuk memformat angka agar tidak ada ".0" jika bilangan bulat
-def format_angka(x):
-    return str(int(x)) if x == int(x) else f"{x:.2f}"# Fungsi untuk memformat angka agar tidak ada ".0" jika bilangan bulat
+from fractions import Fraction
 
+def format_angka(x):
+    """ Mengubah angka menjadi format yang lebih rapi: 
+        - Menghilangkan desimal jika bilangan bulat
+        - Mengubah menjadi pecahan jika perlu 
+    """
+    if x == int(x):  # Jika bilangan bulat, ubah ke int
+        return str(int(x))
+    elif isinstance(x, float):
+        return str(Fraction(x).limit_denominator())  # Ubah ke pecahan
+    return str(x)
+    
 # Fungsi untuk menyusun persamaan kuadrat dengan tanda yang benar
 def format_persamaan(a, b, c):
     persamaan = f"f(x) = {format_angka(a)}x^2"
