@@ -20,9 +20,14 @@ def format_pecahan(nilai):
 
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
+    sqrt_D = sp.sqrt(D)  # Simbol akar
     if D > 0:
-        x1 = Fraction(-b + sp.sqrt(D), 2*a)
-        x2 = Fraction(-b - sp.sqrt(D), 2*a)
+        if sqrt_D.is_integer:  # Jika D adalah kuadrat sempurna
+            x1 = Fraction(-b + sqrt_D, 2*a)
+            x2 = Fraction(-b - sqrt_D, 2*a)
+        else:
+            x1 = f"(-{b} + √{D}) / (2 * {a})"
+            x2 = f"(-{b} - √{D}) / (2 * {a})"
         return f"Akar real: x₁ = {x1}, x₂ = {x2}"
     elif D == 0:
         x = Fraction(-b, 2*a)
