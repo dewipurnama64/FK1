@@ -26,7 +26,7 @@ def cari_akar(a, b, c):
         imag_part = sp.sqrt(-D) / (2*a)
         return f"{real_part:.2f} + {imag_part:.2f}i", f"{real_part:.2f} - {imag_part:.2f}i"
 
-    return f"{x1:.2f}", f"{x2:.2f}"
+    return x1, x2
 
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
@@ -52,10 +52,18 @@ if st.button("🔍 Hitung"):
     st.write(f"📌 **Diskriminan:** {D}")
     st.write(f"📌 **Definit:** {definit}")
 
-    # Menampilkan akar dalam bentuk desimal
-    st.markdown("### 📌 Akar-akar Persamaan:")
+    # Menampilkan cara pengerjaan akar
+    st.markdown("### 📌 Cara Menghitung Akar-Akar:")
     st.latex(r"x_{1,2} = \frac{-b \pm \sqrt{D}}{2a}")
-    st.write(f"**x₁ = {akar1}, x₂ = {akar2}**")
+    st.latex(fr"x_{{1,2}} = \frac{{-({b}) \pm \sqrt{{{D}}}}}{{2({a})}}")
+    
+    if D >= 0:
+        x1, x2 = akar1, akar2
+        st.latex(fr"x_1 = \frac{{-({b}) + \sqrt{{{D}}}}}{{2({a})}} = {x1:.2f}")
+        st.latex(fr"x_2 = \frac{{-({b}) - \sqrt{{{D}}}}}{{2({a})}} = {x2:.2f}")
+        st.write(f"**Akar-akar persamaan:** x₁ = {x1:.2f}, x₂ = {x2:.2f}")
+    else:
+        st.write(f"**Akar-akar kompleks:** x₁ = {akar1}, x₂ = {akar2}")
 
     # Titik puncak (nilai optimum)
     if a != 0:
