@@ -14,28 +14,31 @@ def cek_definit(D, a):
     return "Bukan definit positif maupun definit negatif"
 
 def format_pecahan(nilai):
-    """Mengonversi angka ke pecahan jika bisa, jika tidak tetap dalam desimal."""
-    pecahan = Fraction(nilai).limit_denominator()
+    """Mengonversi angka ke pecahan paling sederhana."""
+    pecahan = Fraction(valor).limit_denominator()
     return pecahan if pecahan.denominator != 1 else int(pecahan.numerator)
 
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     sqrt_D = sp.sqrt(D)  # Simbol akar
+
     if D > 0:
         if sqrt_D.is_integer:  # Jika D adalah kuadrat sempurna
             x1 = Fraction(-b + sqrt_D, 2*a)
             x2 = Fraction(-b - sqrt_D, 2*a)
         else:
-            x1 = f"(-{b} + √{D}) / (2 * {a})"
-            x2 = f"(-{b} - √{D}) / (2 * {a})"
-        return f"Akar real: x₁ = {x1}, x₂ = {x2}"
+            x1 = f"\\frac{{-{b} + \\sqrt{{{D}}}}}{{2({a})}}"
+            x2 = f"\\frac{{-{b} - \\sqrt{{{D}}}}}{{2({a})}}"
+        return x1, x2
+
     elif D == 0:
         x = Fraction(-b, 2*a)
-        return f"Akar kembar: x = {x}"
+        return x, x
+
     else:
         real_part = Fraction(-b, 2*a)
-        imag_part = f"√{-D} / (2 * {a})"
-        return f"Akar kompleks: x₁ = {real_part} + {imag_part} i, x₂ = {real_part} - {imag_part} i"
+        imag_part = f"\\frac{{\\sqrt{{{-D}}}}}{{2({a})}}"
+        return f"{real_part} + {imag_part} i", f"{real_part} - {imag_part} i"
 
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
@@ -49,18 +52,22 @@ c = st.number_input("Masukkan nilai c", value=0.0, format="%.2f")
 if st.button("🔍 Hitung"):
     D = hitung_diskriminan(a, b, c)
     definit = cek_definit(D, a)
-    akar = cari_akar(a, b, c)
-    
+    akar1, akar2 = cari_akar(a, b, c)
+
     st.subheader("📊 Hasil Perhitungan")
-    
+
     # Menampilkan persamaan kuadrat lengkap
     st.markdown("### 📌 Persamaan Kuadrat:")
     st.latex(f"f(x) = {a}x^2 + {b}x + {c}")
-    
+
     # Diskriminan dan definit
     st.write(f"📌 **Diskriminan:** {D}")
     st.write(f"📌 **Definit:** {definit}")
-    st.write(f"📌 **Akar:** {akar}")
+
+    # Menampilkan akar dalam bentuk pecahan atau akar
+    st.markdown("### 📌 Akar-akar Persamaan:")
+    st.latex(r"x_{1,2} = \frac{-b \pm \sqrt{D}}{2a}")
+    st.latex(f"x_1 = {akar1}, \quad x_2 = {akar2}")
 
     # Titik puncak (nilai optimum)
     if a != 0:
