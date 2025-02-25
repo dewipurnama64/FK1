@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
 
-# Fungsi format angka agar lebih rapi (tanpa .0 untuk bilangan bulat, 2 desimal untuk desimal)
+# Fungsi format angka agar lebih rapi (tanpa .0 jika bilangan bulat, 2 desimal jika desimal)
 def format_angka(x):
     if x == int(x):  
         return str(int(x))  # Jika bilangan bulat, tampilkan tanpa desimal
@@ -72,7 +72,7 @@ def cari_akar(a, b, c):
 
         langkah = f"""
         \\[
-        x_{{1,2}} = \\frac{{-({format_angka(b)}) \\pm \\sqrt{{{format_angka(D)}}}i}}{{2({format_angka(a)})}}
+        x_{{1,2}} = \\frac{{-({format_angka(b)}) \\pm \\sqrt{{{format_angka(-D)}}}i}}{{2({format_angka(a)})}}
         \\]
         \\[
         x_1 = {format_angka(sp.N(real_part))} + {format_angka(sp.N(imag_part))}i, 
