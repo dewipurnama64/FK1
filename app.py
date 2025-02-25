@@ -5,7 +5,7 @@ import sympy as sp
 
 # Fungsi untuk memformat angka agar tidak ada ".0" jika bilangan bulat
 def format_angka(x):
-    return int(x) if x == int(x) else x
+    return int(x) if x == int(x) else round(x, 2)
 
 # Fungsi Matematika
 def hitung_diskriminan(a, b, c):
@@ -28,9 +28,9 @@ def cari_akar(a, b, c):
     else:
         real_part = -b / (2*a)
         imag_part = sp.sqrt(-D) / (2*a)
-        return f"{real_part:.2f} + {imag_part:.2f}i", f"{real_part:.2f} - {imag_part:.2f}i"
+        return f"\\frac{{-({format_angka(b)})}} {{2({format_angka(a)})}} \\pm \\frac{{\\sqrt{{{format_angka(-D)}}}}}{{2({format_angka(a)})}} i"
 
-    return x1, x2
+    return format_angka(x1), format_angka(x2)
 
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
@@ -44,11 +44,11 @@ c = st.number_input("Masukkan nilai c", value=0.0, format="%.2f")
 if st.button("🔍 Hitung"):
     D = hitung_diskriminan(a, b, c)
     definit = cek_definit(D, a)
-    akar1, akar2 = cari_akar(a, b, c)
+    akar = cari_akar(a, b, c)
 
     st.subheader("📊 Hasil Perhitungan")
 
-    # Menampilkan persamaan kuadrat lengkap dengan angka yang sudah diformat
+    # Menampilkan persamaan kuadrat
     a_fmt, b_fmt, c_fmt = format_angka(a), format_angka(b), format_angka(c)
     st.markdown("### 📌 Persamaan Kuadrat:")
     st.latex(f"f(x) = {a_fmt}x^2 + {b_fmt}x + {c_fmt}")
@@ -63,13 +63,11 @@ if st.button("🔍 Hitung"):
     st.latex(fr"x_{{1,2}} = \frac{{-({b_fmt}) \pm \sqrt{{{D}}}}}{{2({a_fmt})}}")
     
     if D >= 0:
-        x1, x2 = akar1, akar2
-        x1_fmt, x2_fmt = format_angka(x1), format_angka(x2)
-        st.latex(fr"x_1 = \frac{{-({b_fmt}) + \sqrt{{{D}}}}}{{2({a_fmt})}} = {x1_fmt}")
-        st.latex(fr"x_2 = \frac{{-({b_fmt}) - \sqrt{{{D}}}}}{{2({a_fmt})}} = {x2_fmt}")
-        st.write(f"**Akar-akar persamaan:** x₁ = {x1_fmt}, x₂ = {x2_fmt}")
+        x1, x2 = akar
+        st.latex(fr"x_1 = {x1}, \quad x_2 = {x2}")
+        st.write(f"**Akar-akar persamaan:** x₁ = {x1}, x₂ = {x2}")
     else:
-        st.write(f"**Akar-akar kompleks:** x₁ = {akar1}, x₂ = {akar2}")
+        st.latex(fr"x_{{1,2}} = {akar}")
 
     # Titik puncak (nilai optimum)
     if a != 0:
