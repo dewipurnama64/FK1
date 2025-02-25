@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
 
-# Fungsi untuk format angka (bulat tanpa desimal, desimal dengan 2 angka di belakang koma)
+# Fungsi format angka agar lebih rapi (tanpa .0 untuk bilangan bulat, 2 desimal untuk lainnya)
 def format_angka(x):
     if x == int(x):  
         return str(int(x))  # Jika bilangan bulat, tampilkan tanpa desimal
@@ -37,29 +37,66 @@ def cek_definit(D, a):
         return "Definit positif" if a > 0 else "Definit negatif"
     return "Bukan definit positif maupun definit negatif"
 
-# Fungsi mencari akar persamaan kuadrat
+# Fungsi mencari akar persamaan kuadrat dan menampilkan langkah-langkah
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     
     if D > 0:  # Akar real berbeda
-        akar1 = sp.N((-b + sp.sqrt(D)) / (2*a))  # Hitung dalam bentuk numerik
-        akar2 = sp.N((-b - sp.sqrt(D)) / (2*a))
-        return f"x₁ = {format_angka(akar1)}, x₂ = {format_angka(akar2)}"
+        akar1 = (-b + sp.sqrt(D)) / (2*a)
+        akar2 = (-b - sp.sqrt(D)) / (2*a)
+
+        langkah = f"""
+        \\[
+        x_{{1,2}} = \\frac{{-({format_angka(b)}) \\pm \\sqrt{{{format_angka(D)}}}}}{{2({format_angka(a)})}}
+        \\]
+        \\[
+        x_1 = {format_angka(sp.N(akar1))}, \\quad x_2 = {format_angka(sp.N(akar2))}
+        \\]
+        """
     
     elif D == 0:  # Akar kembar
-        akar = sp.N(-b / (2*a))
-        return f"x = {format_angka(akar)} (Akar kembar)"
-    
+        akar = -b / (2*a)
+
+        langkah = f"""
+        \\[
+        x = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}}
+        \\]
+        \\[
+        x = {format_angka(sp.N(akar))} \\quad (Akar kembar)
+        \\]
+        """
+
     else:  # Akar kompleks
-        real_part = sp.N(-b / (2*a))
-        imag_part = sp.N(sp.sqrt(-D) / (2*a))
-        return f"x₁ = {format_angka(real_part)} + {format_angka(imag_part)}i, x₂ = {format_angka(real_part)} - {format_angka(imag_part)}i"
+        real_part = -b / (2*a)
+        imag_part = sp.sqrt(-D) / (2*a)
+
+        langkah = f"""
+        \\[
+        x_{{1,2}} = \\frac{{-({format_angka(b)}) \\pm \\sqrt{{{format_angka(D)}}}i}}{{2({format_angka(a)})}}
+        \\]
+        \\[
+        x_1 = {format_angka(sp.N(real_part))} + {format_angka(sp.N(imag_part))}i, 
+        \\quad x_2 = {format_angka(sp.N(real_part))} - {format_angka(sp.N(imag_part))}i
+        \\]
+        """
+    
+    return langkah
 
 # Fungsi mencari titik puncak
 def cari_titik_puncak(a, b, c):
-    x_p = sp.N(-b / (2*a))
-    y_p = sp.N(-hitung_diskriminan(a, b, c) / (4*a))
-    return x_p, y_p
+    x_p = -b / (2*a)
+    y_p = -hitung_diskriminan(a, b, c) / (4*a)
+
+    langkah = f"""
+    \\[
+    x_p = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {format_angka(x_p)}
+    \\]
+    \\[
+    y_p = \\frac{{-({format_angka(hitung_diskriminan(a, b, c))})}}{{4({format_angka(a)})}} = {format_angka(y_p)}
+    \\]
+    """
+    
+    return x_p, y_p, langkah
 
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
@@ -77,20 +114,21 @@ if st.button("🔍 Hitung"):
     else:
         D = hitung_diskriminan(a, b, c)
         definit = cek_definit(D, a)
-        akar = cari_akar(a, b, c)
-        x_p, y_p = cari_titik_puncak(a, b, c)
+        akar_langkah = cari_akar(a, b, c)
+        x_p, y_p, puncak_langkah = cari_titik_puncak(a, b, c)
         
         st.subheader("📊 Hasil Perhitungan")
         st.markdown(f"#### **Persamaan Kuadrat:**")
         st.latex(format_persamaan(a, b, c))  # Menampilkan persamaan kuadrat
         
-        st.write(f"📌 **Diskriminan (D):** {D}")
+        st.write(f"📌 **Diskriminan (D):** {format_angka(D)}")
         st.write(f"📌 **Definit:** {definit}")  
-        st.write(f"📌 **Akar-akar persamaan:** {akar}")
 
-        st.markdown("### Titik Puncak (Nilai Optimum):")
-        st.latex(f"x_p = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {format_angka(x_p)}")
-        st.latex(f"y_p = \\frac{{-({format_angka(D)})}}{{4({format_angka(a)})}} = {format_angka(y_p)}")
+        st.markdown("### **Perhitungan Akar-Akar:**")
+        st.markdown(akar_langkah)
+
+        st.markdown("### **Perhitungan Titik Puncak (Nilai Optimum):**")
+        st.markdown(puncak_langkah)
 
         # Menampilkan grafik fungsi kuadrat
         x_range = max(abs(int(x_p)) + 5, 10)  # Menyesuaikan range x agar grafik lebih proporsional
