@@ -23,14 +23,14 @@ def cari_akar(a, b, c):
     if D > 0:
         x1 = (-b + sqrt_D) / (2*a)
         x2 = (-b - sqrt_D) / (2*a)
+        return format_angka(x1), format_angka(x2)
     elif D == 0:
         x1 = x2 = -b / (2*a)
+        return format_angka(x1), format_angka(x2)
     else:
         real_part = -b / (2*a)
         imag_part = sp.sqrt(-D) / (2*a)
-        return f"\\frac{{-({format_angka(b)})}} {{2({format_angka(a)})}} \\pm \\frac{{\\sqrt{{{format_angka(-D)}}}}}{{2({format_angka(a)})}} i"
-
-    return format_angka(x1), format_angka(x2)
+        return real_part, imag_part
 
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
@@ -61,13 +61,16 @@ if st.button("🔍 Hitung"):
     st.markdown("### 📌 Cara Menghitung Akar-Akar:")
     st.latex(r"x_{1,2} = \frac{-b \pm \sqrt{D}}{2a}")
     st.latex(fr"x_{{1,2}} = \frac{{-({b_fmt}) \pm \sqrt{{{D}}}}}{{2({a_fmt})}}")
-    
+
     if D >= 0:
         x1, x2 = akar
         st.latex(fr"x_1 = {x1}, \quad x_2 = {x2}")
         st.write(f"**Akar-akar persamaan:** x₁ = {x1}, x₂ = {x2}")
     else:
-        st.latex(fr"x_{{1,2}} = {akar}")
+        real_part, imag_part = akar
+        real_fmt, imag_fmt = format_angka(real_part), format_angka(imag_part)
+        st.latex(fr"x_{{1,2}} = \frac{{-({b_fmt})}}{{2({a_fmt})}} \pm \frac{{\sqrt{{{format_angka(-D)}}}}}{{2({a_fmt})}} i")
+        st.latex(fr"x_1 = {real_fmt} + {imag_fmt}i, \quad x_2 = {real_fmt} - {imag_fmt}i")
 
     # Titik puncak (nilai optimum)
     if a != 0:
