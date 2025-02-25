@@ -13,11 +13,16 @@ def cek_definit(D, a):
         return "Definit positif" if a > 0 else "Definit negatif"
     return "Bukan definit positif maupun definit negatif"
 
+def format_pecahan(nilai):
+    """Mengonversi angka ke pecahan jika bisa, jika tidak tetap dalam desimal."""
+    pecahan = Fraction(nilai).limit_denominator()
+    return pecahan if pecahan.denominator != 1 else int(pecahan.numerator)
+
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     if D > 0:
-        x1 = f"(-{b} + √{D}) / (2 * {a})"
-        x2 = f"(-{b} - √{D}) / (2 * {a})"
+        x1 = Fraction(-b + sp.sqrt(D), 2*a)
+        x2 = Fraction(-b - sp.sqrt(D), 2*a)
         return f"Akar real: x₁ = {x1}, x₂ = {x2}"
     elif D == 0:
         x = Fraction(-b, 2*a)
@@ -26,7 +31,7 @@ def cari_akar(a, b, c):
         real_part = Fraction(-b, 2*a)
         imag_part = f"√{-D} / (2 * {a})"
         return f"Akar kompleks: x₁ = {real_part} + {imag_part} i, x₂ = {real_part} - {imag_part} i"
-        
+
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
 st.markdown("#### Masukkan nilai a, b, dan c dari persamaan kuadrat:")
@@ -54,21 +59,21 @@ if st.button("🔍 Hitung"):
 
     # Titik puncak (nilai optimum)
     if a != 0:
-        x_p = -b / (2 * a)
-        y_p = -D / (4 * a)
+        x_p = format_pecahan(-b / (2 * a))
+        y_p = format_pecahan(-D / (4 * a))
 
         st.markdown("### Titik Puncak (Nilai Optimum):")
-        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({b})}}{{2({a})}} = {x_p:.2f}")
-        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({a})}} = {y_p:.2f}")
+        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({b})}}{{2({a})}} = {x_p}")
+        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({a})}} = {y_p}")
 
-        # Perbaikan skala grafik
-        x_min = x_p - 5
-        x_max = x_p + 5
+        # Perbaikan skala grafik agar lebih sesuai
+        x_min = x_p - 5 if isinstance(x_p, (int, float)) else -10
+        x_max = x_p + 5 if isinstance(x_p, (int, float)) else 10
         x = np.linspace(x_min, x_max, 400)
         y = a*x**2 + b*x + c
 
         y_min, y_max = min(y), max(y)
-        margin = (y_max - y_min) * 0.1
+        margin = (y_max - y_min) * 0.2
         y_min -= margin
         y_max += margin
 
@@ -79,7 +84,7 @@ if st.button("🔍 Hitung"):
         ax.axvline(0, color='black', linewidth=1)
         
         # Menandai titik puncak
-        ax.scatter(x_p, y_p, color='red', zorder=3, label=f"Titik Puncak ({x_p:.2f}, {y_p:.2f})")
+        ax.scatter(float(x_p), float(y_p), color='red', zorder=3, label=f"Titik Puncak ({x_p}, {y_p})")
 
         # Menyesuaikan skala
         ax.set_xlim(x_min, x_max)
