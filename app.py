@@ -2,13 +2,12 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
-from fractions import Fraction
 
-# Fungsi format angka agar tidak ada 0 di belakang jika bilangan bulat
+# Fungsi untuk format angka (bulat tanpa desimal, desimal dengan 2 angka di belakang koma)
 def format_angka(x):
-    if x == int(x):  # Jika bilangan bulat, kembalikan sebagai integer
-        return str(int(x))
-    return str(x)
+    if x == int(x):  
+        return str(int(x))  # Jika bilangan bulat, tampilkan tanpa desimal
+    return f"{x:.2f}"  # Jika desimal, tampilkan dengan 2 angka di belakang koma
 
 # Fungsi untuk membentuk persamaan kuadrat dengan format yang benar
 def format_persamaan(a, b, c):
@@ -43,23 +42,23 @@ def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     
     if D > 0:  # Akar real berbeda
-        akar1 = sp.simplify((-b + sp.sqrt(D)) / (2*a))
-        akar2 = sp.simplify((-b - sp.sqrt(D)) / (2*a))
-        return f"x₁ = {akar1}, x₂ = {akar2}"
+        akar1 = sp.N((-b + sp.sqrt(D)) / (2*a))  # Hitung dalam bentuk numerik
+        akar2 = sp.N((-b - sp.sqrt(D)) / (2*a))
+        return f"x₁ = {format_angka(akar1)}, x₂ = {format_angka(akar2)}"
     
     elif D == 0:  # Akar kembar
-        akar = sp.simplify(-b / (2*a))
-        return f"x = {akar} (Akar kembar)"
+        akar = sp.N(-b / (2*a))
+        return f"x = {format_angka(akar)} (Akar kembar)"
     
     else:  # Akar kompleks
-        real_part = sp.simplify(-b / (2*a))
-        imag_part = sp.simplify(sp.sqrt(-D) / (2*a))
-        return f"x₁ = {real_part} + {imag_part}i, x₂ = {real_part} - {imag_part}i"
+        real_part = sp.N(-b / (2*a))
+        imag_part = sp.N(sp.sqrt(-D) / (2*a))
+        return f"x₁ = {format_angka(real_part)} + {format_angka(imag_part)}i, x₂ = {format_angka(real_part)} - {format_angka(imag_part)}i"
 
 # Fungsi mencari titik puncak
 def cari_titik_puncak(a, b, c):
-    x_p = sp.simplify(-b / (2*a))
-    y_p = sp.simplify(-hitung_diskriminan(a, b, c) / (4*a))
+    x_p = sp.N(-b / (2*a))
+    y_p = sp.N(-hitung_diskriminan(a, b, c) / (4*a))
     return x_p, y_p
 
 # UI di Streamlit
@@ -90,8 +89,8 @@ if st.button("🔍 Hitung"):
         st.write(f"📌 **Akar-akar persamaan:** {akar}")
 
         st.markdown("### Titik Puncak (Nilai Optimum):")
-        st.latex(f"x_p = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {x_p}")
-        st.latex(f"y_p = \\frac{{-({format_angka(D)})}}{{4({format_angka(a)})}} = {y_p}")
+        st.latex(f"x_p = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {format_angka(x_p)}")
+        st.latex(f"y_p = \\frac{{-({format_angka(D)})}}{{4({format_angka(a)})}} = {format_angka(y_p)}")
 
         # Menampilkan grafik fungsi kuadrat
         x_range = max(abs(int(x_p)) + 5, 10)  # Menyesuaikan range x agar grafik lebih proporsional
