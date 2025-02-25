@@ -5,7 +5,7 @@ import sympy as sp
 
 # Fungsi untuk memformat angka agar tidak ada ".0" jika bilangan bulat
 def format_angka(x):
-    return int(x) if x == int(x) else round(x, 2)
+    return str(int(x)) if x == int(x) else f"{x:.2f}"# Fungsi untuk memformat angka agar tidak ada ".0" jika bilangan bulat
 
 # Fungsi untuk menyusun persamaan kuadrat dengan tanda yang benar
 def format_persamaan(a, b, c):
@@ -45,8 +45,8 @@ def cari_akar(a, b, c):
     else:
         real_part = -b / (2*a)
         imag_part = sp.sqrt(-D) / (2*a)
-        return real_part, imag_part
-
+        return format_angka(real_part), format_angka(imag_part)
+        
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
 st.markdown("#### Masukkan nilai a, b, dan c dari persamaan kuadrat:")
@@ -78,15 +78,14 @@ if st.button("🔍 Hitung"):
     st.latex(fr"x_{{1,2}} = \frac{{-({format_angka(b)}) \pm \sqrt{{{format_angka(D)}}}}}{{2({format_angka(a)})}}")
 
     if D >= 0:
-        x1, x2 = akar
-        st.latex(fr"x_1 = {x1}, \quad x_2 = {x2}")
-        st.write(f"**Akar-akar persamaan:** x₁ = {x1}, x₂ = {x2}")
-    else:
-        real_part, imag_part = akar
-        real_fmt, imag_fmt = format_angka(real_part), format_angka(imag_part)
-        st.latex(fr"x_{{1,2}} = \frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} \pm \frac{{\sqrt{{{format_angka(-D)}}}}}{{2({format_angka(a)})}} i")
-        st.latex(fr"x_1 = {real_fmt} + {imag_fmt}i, \quad x_2 = {real_fmt} - {imag_fmt}i")
-
+    x1, x2 = akar
+    st.latex(fr"x_1 = {x1}, \quad x_2 = {x2}")
+    st.write(f"**Akar-akar persamaan:** x₁ = {x1}, x₂ = {x2}")
+else:
+    real_part, imag_part = akar
+    st.latex(fr"x_{{1,2}} = {real_part} \pm {imag_part}i")
+    st.write(f"**Akar-akar kompleks:** x₁ = {real_part} + {imag_part}i, x₂ = {real_part} - {imag_part}i")
+    
     # Titik puncak (nilai optimum)
     if a != 0:
         x_p = -b / (2 * a)
