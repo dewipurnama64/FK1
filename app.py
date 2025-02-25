@@ -16,17 +16,17 @@ def cek_definit(D, a):
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     if D > 0:
-        x1 = Fraction(-b + sp.sqrt(D), 2*a)
-        x2 = Fraction(-b - sp.sqrt(D), 2*a)
+        x1 = f"(-{b} + √{D}) / (2 * {a})"
+        x2 = f"(-{b} - √{D}) / (2 * {a})"
         return f"Akar real: x₁ = {x1}, x₂ = {x2}"
     elif D == 0:
         x = Fraction(-b, 2*a)
         return f"Akar kembar: x = {x}"
     else:
         real_part = Fraction(-b, 2*a)
-        imag_part = Fraction(sp.sqrt(-D), 2*a)
-        return f"Akar kompleks: x₁ = {real_part} + {imag_part}i, x₂ = {real_part} - {imag_part}i"
-
+        imag_part = f"√{-D} / (2 * {a})"
+        return f"Akar kompleks: x₁ = {real_part} + {imag_part} i, x₂ = {real_part} - {imag_part} i"
+        
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
 st.markdown("#### Masukkan nilai a, b, dan c dari persamaan kuadrat:")
