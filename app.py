@@ -69,8 +69,8 @@ if st.button("🔍 Hitung"):
 
     # Menampilkan langkah penyelesaian akar
     st.markdown("### 📜 Cara Pengerjaan Akar:")
-    st.markdown(f"$ x_{1 2} = \\frac{{-({b}) \\pm \\sqrt{{{D}}}}}{{2({a})}} $")
-
+    st.markdown(f"$ x_{{1,2}} = \\frac{{-({b}) \\pm \\sqrt{{{D}}}}}{{2({a})}} $")
+    
     # Menampilkan titik puncak hanya jika a ≠ 0
     if a != 0:
         st.markdown("### 🎯 Titik Puncak (Nilai Optimum):")
