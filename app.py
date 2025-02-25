@@ -37,7 +37,7 @@ def cek_definit(D, a):
         return "Definit positif" if a > 0 else "Definit negatif"
     return "Bukan definit positif maupun definit negatif"
 
-# Fungsi mencari akar persamaan kuadrat dan menampilkan langkah-langkah dengan tampilan rapi
+# Fungsi mencari akar persamaan kuadrat dengan tampilan langkah perhitungan rapi
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     
@@ -59,10 +59,7 @@ def cari_akar(a, b, c):
 
         langkah = f"""
         \\[
-        x = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}}
-        \\]
-        \\[
-        x = {format_angka(sp.N(akar))} \\quad (Akar kembar)
+        x = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {format_angka(sp.N(akar))}
         \\]
         """
 
