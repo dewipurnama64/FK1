@@ -2,134 +2,107 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
-
 from fractions import Fraction
 
+# Fungsi format angka agar tidak ada 0 di belakang jika bilangan bulat
 def format_angka(x):
-    """ Mengubah angka menjadi format yang lebih rapi: 
-        - Menghilangkan desimal jika bilangan bulat
-        - Mengubah menjadi pecahan jika perlu 
-    """
-    if x == int(x):  # Jika bilangan bulat, ubah ke int
+    if x == int(x):  # Jika bilangan bulat, kembalikan sebagai integer
         return str(int(x))
-    elif isinstance(x, float):
-        return str(Fraction(x).limit_denominator())  # Ubah ke pecahan
     return str(x)
-    
-# Fungsi untuk menyusun persamaan kuadrat dengan tanda yang benar
-def format_persamaan(a, b, c):
-    persamaan = f"f(x) = {format_angka(a)}x^2"
-    if b > 0:
-        persamaan += f" + {format_angka(b)}x"
-    elif b < 0:
-        persamaan += f" - {abs(format_angka(b))}x"
 
-    if c > 0:
-        persamaan += f" + {format_angka(c)}"
-    elif c < 0:
-        persamaan += f" - {abs(format_angka(c))}"
-    
+# Fungsi untuk membentuk persamaan kuadrat dengan format yang benar
+def format_persamaan(a, b, c):
+    persamaan = f"f(x) = {format_angka(a)}x²"
+
+    if b != 0:
+        if b > 0:
+            persamaan += f" + {format_angka(b)}x"
+        else:
+            persamaan += f" - {format_angka(abs(b))}x"
+
+    if c != 0:
+        if c > 0:
+            persamaan += f" + {format_angka(c)}"
+        else:
+            persamaan += f" - {format_angka(abs(c))}"
+
     return persamaan
 
-# Fungsi Matematika
+# Fungsi menghitung diskriminan
 def hitung_diskriminan(a, b, c):
     return b**2 - 4*a*c
 
+# Fungsi mengecek apakah definit positif atau negatif
 def cek_definit(D, a):
     if D < 0:
         return "Definit positif" if a > 0 else "Definit negatif"
     return "Bukan definit positif maupun definit negatif"
 
+# Fungsi mencari akar persamaan kuadrat
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
-    sqrt_D = sp.sqrt(D)
+    
+    if D > 0:  # Akar real berbeda
+        akar1 = Fraction(-b + sp.sqrt(D), 2*a)
+        akar2 = Fraction(-b - sp.sqrt(D), 2*a)
+        return f"x₁ = {akar1}, x₂ = {akar2}"
+    
+    elif D == 0:  # Akar kembar
+        akar = Fraction(-b, 2*a)
+        return f"x = {akar} (Akar kembar)"
+    
+    else:  # Akar kompleks
+        real_part = Fraction(-b, 2*a)
+        imag_part = Fraction(sp.sqrt(-D), 2*a)
+        return f"x₁ = {real_part} + {imag_part}i, x₂ = {real_part} - {imag_part}i"
 
-    if D > 0:
-        x1 = (-b + sqrt_D) / (2*a)
-        x2 = (-b - sqrt_D) / (2*a)
-        return format_angka(x1), format_angka(x2)
-    elif D == 0:
-        x1 = x2 = -b / (2*a)
-        return format_angka(x1), format_angka(x2)
-    else:
-        real_part = -b / (2*a)
-        imag_part = sp.sqrt(-D) / (2*a)
-        return format_angka(real_part), format_angka(imag_part)
-        
+# Fungsi mencari titik puncak
+def cari_titik_puncak(a, b, c):
+    x_p = Fraction(-b, 2*a)
+    y_p = Fraction(-hitung_diskriminan(a, b, c), 4*a)
+    return x_p, y_p
+
 # UI di Streamlit
 st.title("📐 Kalkulator Fungsi Kuadrat")
-st.markdown("#### Masukkan nilai a, b, dan c dari persamaan kuadrat:")
-st.latex(r"f(x) = ax^2 + bx + c")
+
+st.markdown("### Masukkan nilai a, b, dan c dari persamaan kuadrat:")
+st.latex("ax^2 + bx + c = 0")
 
 a = st.number_input("Masukkan nilai a", value=1.0, format="%.2f")
 b = st.number_input("Masukkan nilai b", value=0.0, format="%.2f")
 c = st.number_input("Masukkan nilai c", value=0.0, format="%.2f")
 
 if st.button("🔍 Hitung"):
-    D = hitung_diskriminan(a, b, c)
-    definit = cek_definit(D, a)
-    akar = cari_akar(a, b, c)
-
-    st.subheader("📊 Hasil Perhitungan")
-
-    # Menampilkan persamaan kuadrat
-    st.markdown("### 📌 Persamaan Kuadrat:")
-    persamaan_kuadrat = format_persamaan(a, b, c)
-    st.latex(persamaan_kuadrat)
-
-    # Diskriminan dan definit
-    st.write(f"📌 **Diskriminan:** {D}")
-    st.write(f"📌 **Definit:** {definit}")
-
-    # Menampilkan cara pengerjaan akar
-    st.markdown("### 📌 Cara Menghitung Akar-Akar:")
-    st.latex(r"x_{1,2} = \frac{-b \pm \sqrt{D}}{2a}")
-    st.latex(fr"x_{{1,2}} = \frac{{-({format_angka(b)}) \pm \sqrt{{{format_angka(D)}}}}}{{2({format_angka(a)})}}")
-
-    if D >= 0:
-        x1, x2 = akar
-        st.latex(fr"x_1 = {x1}, \quad x_2 = {x2}")
-        st.write(f"**Akar-akar persamaan:** x₁ = {x1}, x₂ = {x2}")
+    if a == 0:
+        st.error("Nilai a tidak boleh 0! Persamaan ini bukan fungsi kuadrat.")
     else:
-        real_part, imag_part = akar
-        st.latex(fr"x_{{1,2}} = {real_part} \pm {imag_part}i")
-        st.write(f"**Akar-akar kompleks:** x₁ = {real_part} + {imag_part}i, x₂ = {real_part} - {imag_part}i")
-    
-    # Titik puncak (nilai optimum)
-    if a != 0:
-        x_p = -b / (2 * a)
-        y_p = -D / (4 * a)
-
-        x_p_fmt, y_p_fmt = format_angka(x_p), format_angka(y_p)
+        D = hitung_diskriminan(a, b, c)
+        definit = cek_definit(D, a)
+        akar = cari_akar(a, b, c)
+        x_p, y_p = cari_titik_puncak(a, b, c)
+        
+        st.subheader("📊 Hasil Perhitungan")
+        st.markdown(f"#### **Persamaan Kuadrat:**")
+        st.latex(format_persamaan(a, b, c))  # Menampilkan persamaan kuadrat
+        
+        st.write(f"📌 **Diskriminan (D):** {D}")
+        st.write(f"📌 **Definit:** {definit}")  
+        st.write(f"📌 **Akar-akar persamaan:** {akar}")
 
         st.markdown("### Titik Puncak (Nilai Optimum):")
-        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {x_p_fmt}")
-        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({format_angka(a)})}} = {y_p_fmt}")
+        st.latex(f"x_p = \\frac{{-({format_angka(b)})}}{{2({format_angka(a)})}} = {x_p}")
+        st.latex(f"y_p = \\frac{{-({format_angka(D)})}}{{4({format_angka(a)})}} = {y_p}")
 
-        # Perbaikan skala grafik agar lebih sesuai
-        x_min = x_p - 5
-        x_max = x_p + 5
-        x = np.linspace(x_min, x_max, 400)
+        # Menampilkan grafik fungsi kuadrat
+        x_range = max(abs(int(x_p)) + 5, 10)  # Menyesuaikan range x agar grafik lebih proporsional
+        x = np.linspace(-x_range, x_range, 400)
         y = a*x**2 + b*x + c
 
-        y_min, y_max = min(y), max(y)
-        margin = (y_max - y_min) * 0.2
-        y_min -= margin
-        y_max += margin
-
-        # Plot grafik
         fig, ax = plt.subplots()
-        ax.plot(x, y, label=f"${persamaan_kuadrat}$", color="blue")
+        ax.plot(x, y, label=f"{format_persamaan(a, b, c)}")
         ax.axhline(0, color='black', linewidth=1)
         ax.axvline(0, color='black', linewidth=1)
-        
-        # Menandai titik puncak
-        ax.scatter(float(x_p), float(y_p), color='red', zorder=3, label=f"Titik Puncak ({x_p_fmt}, {y_p_fmt})")
-
-        # Menyesuaikan skala
-        ax.set_xlim(x_min, x_max)
-        ax.set_ylim(y_min, y_max)
-
+        ax.scatter([float(x_p)], [float(y_p)], color="red", zorder=5, label="Titik Puncak")
         ax.grid()
         ax.legend()
 
