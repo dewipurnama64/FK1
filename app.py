@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
 
-# Fungsi format angka agar lebih rapi (tanpa .0 untuk bilangan bulat, 2 desimal untuk lainnya)
+# Fungsi format angka agar lebih rapi (tanpa .0 untuk bilangan bulat, 2 desimal untuk desimal)
 def format_angka(x):
     if x == int(x):  
         return str(int(x))  # Jika bilangan bulat, tampilkan tanpa desimal
@@ -11,7 +11,7 @@ def format_angka(x):
 
 # Fungsi untuk membentuk persamaan kuadrat dengan format yang benar
 def format_persamaan(a, b, c):
-    persamaan = f"f(x) = {format_angka(a)}x²"
+    persamaan = f"f(x) = {format_angka(a)}x^2"
 
     if b != 0:
         if b > 0:
@@ -37,7 +37,7 @@ def cek_definit(D, a):
         return "Definit positif" if a > 0 else "Definit negatif"
     return "Bukan definit positif maupun definit negatif"
 
-# Fungsi mencari akar persamaan kuadrat dan menampilkan langkah-langkah
+# Fungsi mencari akar persamaan kuadrat dan menampilkan langkah-langkah dengan tampilan rapi
 def cari_akar(a, b, c):
     D = hitung_diskriminan(a, b, c)
     
