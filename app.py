@@ -3,6 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
 
+# Fungsi untuk memformat angka agar tidak ada ".0" jika bilangan bulat
+def format_angka(x):
+    return int(x) if x == int(x) else x
+
 # Fungsi Matematika
 def hitung_diskriminan(a, b, c):
     return b**2 - 4*a*c
@@ -44,9 +48,10 @@ if st.button("🔍 Hitung"):
 
     st.subheader("📊 Hasil Perhitungan")
 
-    # Menampilkan persamaan kuadrat lengkap
+    # Menampilkan persamaan kuadrat lengkap dengan angka yang sudah diformat
+    a_fmt, b_fmt, c_fmt = format_angka(a), format_angka(b), format_angka(c)
     st.markdown("### 📌 Persamaan Kuadrat:")
-    st.latex(f"f(x) = {a}x^2 + {b}x + {c}")
+    st.latex(f"f(x) = {a_fmt}x^2 + {b_fmt}x + {c_fmt}")
 
     # Diskriminan dan definit
     st.write(f"📌 **Diskriminan:** {D}")
@@ -55,13 +60,14 @@ if st.button("🔍 Hitung"):
     # Menampilkan cara pengerjaan akar
     st.markdown("### 📌 Cara Menghitung Akar-Akar:")
     st.latex(r"x_{1,2} = \frac{-b \pm \sqrt{D}}{2a}")
-    st.latex(fr"x_{{1,2}} = \frac{{-({b}) \pm \sqrt{{{D}}}}}{{2({a})}}")
+    st.latex(fr"x_{{1,2}} = \frac{{-({b_fmt}) \pm \sqrt{{{D}}}}}{{2({a_fmt})}}")
     
     if D >= 0:
         x1, x2 = akar1, akar2
-        st.latex(fr"x_1 = \frac{{-({b}) + \sqrt{{{D}}}}}{{2({a})}} = {x1:.2f}")
-        st.latex(fr"x_2 = \frac{{-({b}) - \sqrt{{{D}}}}}{{2({a})}} = {x2:.2f}")
-        st.write(f"**Akar-akar persamaan:** x₁ = {x1:.2f}, x₂ = {x2:.2f}")
+        x1_fmt, x2_fmt = format_angka(x1), format_angka(x2)
+        st.latex(fr"x_1 = \frac{{-({b_fmt}) + \sqrt{{{D}}}}}{{2({a_fmt})}} = {x1_fmt}")
+        st.latex(fr"x_2 = \frac{{-({b_fmt}) - \sqrt{{{D}}}}}{{2({a_fmt})}} = {x2_fmt}")
+        st.write(f"**Akar-akar persamaan:** x₁ = {x1_fmt}, x₂ = {x2_fmt}")
     else:
         st.write(f"**Akar-akar kompleks:** x₁ = {akar1}, x₂ = {akar2}")
 
@@ -70,9 +76,11 @@ if st.button("🔍 Hitung"):
         x_p = -b / (2 * a)
         y_p = -D / (4 * a)
 
+        x_p_fmt, y_p_fmt = format_angka(x_p), format_angka(y_p)
+
         st.markdown("### Titik Puncak (Nilai Optimum):")
-        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({b})}}{{2({a})}} = {x_p:.2f}")
-        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({a})}} = {y_p:.2f}")
+        st.latex(r"x_p = \frac{-b}{2a} = " + f"\\frac{{-({b_fmt})}}{{2({a_fmt})}} = {x_p_fmt}")
+        st.latex(r"y_p = \frac{-D}{4a} = " + f"\\frac{{-({D})}}{{4({a_fmt})}} = {y_p_fmt}")
 
         # Perbaikan skala grafik agar lebih sesuai
         x_min = x_p - 5
@@ -87,12 +95,12 @@ if st.button("🔍 Hitung"):
 
         # Plot grafik
         fig, ax = plt.subplots()
-        ax.plot(x, y, label=f"${a}x^2 + {b}x + {c}$", color="blue")
+        ax.plot(x, y, label=f"${a_fmt}x^2 + {b_fmt}x + {c_fmt}$", color="blue")
         ax.axhline(0, color='black', linewidth=1)
         ax.axvline(0, color='black', linewidth=1)
         
         # Menandai titik puncak
-        ax.scatter(float(x_p), float(y_p), color='red', zorder=3, label=f"Titik Puncak ({x_p:.2f}, {y_p:.2f})")
+        ax.scatter(float(x_p), float(y_p), color='red', zorder=3, label=f"Titik Puncak ({x_p_fmt}, {y_p_fmt})")
 
         # Menyesuaikan skala
         ax.set_xlim(x_min, x_max)
